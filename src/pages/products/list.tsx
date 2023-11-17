@@ -1,14 +1,19 @@
 import { Box, Button, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
-import { useTable } from "@refinedev/core";
+import { useList, useTable } from "@refinedev/core";
 import { useNavigate } from "react-router-dom";
 import CustomButton from "../../components/common/CustomButton";
 import { Add } from "@mui/icons-material";
-import PropertyCard from "../../components/common/PropertyCard";
 import { useMemo } from "react";
 
 export const ProductPostList = () => 
 {
 	const navigate = useNavigate();
+
+	const { data: categories, isLoading: catsLoading } = useList({
+		resource: 'category'
+	})
+
+	const allCategories = categories?.data ?? []
 
 	const 
 	{
@@ -40,9 +45,8 @@ export const ProductPostList = () =>
             title:
                 logicalFilters.find((item) => item.field === "title")?.value ||
                 "",
-            propertyType:
-                logicalFilters.find((item) => item.field === "propertyType")
-                    ?.value || "",
+			categoryName:
+				logicalFilters.find((item) => item.field === 'categoryName')?.value || ""
         };
     }, [filters]);
 
@@ -73,8 +77,8 @@ export const ProductPostList = () =>
 			<Stack direction="column" width="100%">
 				<Typography fontSize={25} fontWeight={700} color="#11142d">
 					{!allProducts.length
-						? "There are no properties"
-						: "All Properties"}
+						? "There are no products"
+						: "All Products"}
 				</Typography>
 					<Box
 						display="flex"
@@ -108,13 +112,44 @@ export const ProductPostList = () =>
 								]);
 							}}
 						/>
+						<Select
+                                variant="outlined"
+                                color="info"
+                                displayEmpty
+                                required
+                                inputProps={{ "aria-label": "Without label" }}
+                                defaultValue=""
+                                value={currentFilterValues.categoryName}
+                                onChange={(e) => {
+                                    setFilters(
+                                        [
+                                            {
+                                                field: "categoryName",
+                                                operator: "eq",
+                                                value: e.target.value,
+                                            },
+                                        ],
+                                        "replace",
+                                    );
+                                }}
+                            >
+                                <MenuItem value="">All</MenuItem>
+                                {allCategories.map((cat) => (
+                                    <MenuItem
+                                        key={cat.category}
+                                        value={cat.category}
+                                    >
+                                        {cat.category}
+                                    </MenuItem>
+                                ))}
+                            </Select>
 						<Stack
 							direction="row"
 							ml='auto'
 							mr='10px'
 						>
 							<CustomButton
-								title="Add Property"
+								title="Add Product"
 								handleClick={() => navigate("/products/create")}
 								backgroundColor="#F9EBE8"
 								color="#11142d"
@@ -125,8 +160,8 @@ export const ProductPostList = () =>
 			</Stack>
 		</Box>
 
-		<Box sx={{ overflowX: 'auto', width: 'auto' }}>
-			<Box mt="20px" sx={{ display: "flex", flexDirection: 'column', gap: 3 }}>
+		<Box mt='20px' sx={{ overflowX: 'auto', width: 'auto' }}>
+			<Box pb={4} mt="20px" sx={{ display: "flex", flexDirection: 'column', gap: 8, overflowY: 'hidden' }}>
 				<Box
 					display='flex'
 					flexDirection='row'
@@ -137,6 +172,9 @@ export const ProductPostList = () =>
 				>
 					<Stack minWidth='320px'>
 						<Typography fontWeight={600} fontFamily='arial'>id</Typography>
+					</Stack>
+					<Stack minWidth='380px'>
+						<Typography fontWeight={600} fontFamily='arial'>image</Typography>
 					</Stack>
 					<Stack minWidth='380px'>
 						<Typography fontWeight={600} fontFamily='arial'>title</Typography>
@@ -162,6 +200,9 @@ export const ProductPostList = () =>
 					>
 						<Stack minWidth='320px'>
 							<Typography>{product.id}</Typography>
+						</Stack>
+						<Stack minWidth='380px'>
+							<img width='60px' style={{ height: 'auto' }} src={product.image} />
 						</Stack>
 						<Stack minWidth='380px'>
 							<Typography>{product.title.slice(0, 50)}{product.title.length > 50 ? '...' : ''}</Typography>

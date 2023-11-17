@@ -58,6 +58,14 @@ function App() {
                       canDelete: true,
                     },
                   },
+                  {
+                    name: "category",
+                    list: "/category",
+                    create: "/category/create",
+                    meta: {
+                      canDelete: true,
+                    },
+                  },
                 ]}
                 options={{
                   syncWithLocation: true,
