@@ -41,6 +41,7 @@ const CustomButton = ({
                     opacity: 0.9,
                     backgroundColor,
                 },
+                fontFamily: 'Manrope'
             }}
             onClick={handleClick}
         >

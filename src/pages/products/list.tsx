@@ -75,7 +75,7 @@ export const ProductPostList = () =>
 		<Box>
 		<Box mt="20px" sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
 			<Stack direction="column" width="100%">
-				<Typography fontSize={25} fontWeight={700} color="#11142d">
+				<Typography sx={{ fontFamily: 'Manrope' }} fontSize={25} fontWeight={700} color="#11142d">
 					{!allProducts.length
 						? "There are no products"
 						: "All Products"}
@@ -98,6 +98,7 @@ export const ProductPostList = () =>
 						<TextField
 							variant="outlined"
 							color="info"
+							sx={{ fontFamily: 'Manrope' }}
 							placeholder="Search by title"
 							value={currentFilterValues.title}
 							onChange={(e) => {
@@ -118,6 +119,7 @@ export const ProductPostList = () =>
                                 displayEmpty
                                 required
                                 inputProps={{ "aria-label": "Without label" }}
+								sx={{ fontFamily: 'Manrope' }}
                                 defaultValue=""
                                 value={currentFilterValues.categoryName}
                                 onChange={(e) => {
@@ -133,11 +135,12 @@ export const ProductPostList = () =>
                                     );
                                 }}
                             >
-                                <MenuItem value="">All</MenuItem>
+                                <MenuItem sx={{ fontFamily: 'Manrope' }} value="">All</MenuItem>
                                 {allCategories.map((cat) => (
                                     <MenuItem
                                         key={cat.category}
                                         value={cat.category}
+										sx={{ fontFamily: 'Manrope' }}
                                     >
                                         {cat.category}
                                     </MenuItem>
@@ -161,32 +164,39 @@ export const ProductPostList = () =>
 		</Box>
 
 		<Box mt='20px' sx={{ overflowX: 'auto', width: 'auto' }}>
-			<Box pb={4} mt="20px" sx={{ display: "flex", flexDirection: 'column', gap: 8, overflowY: 'hidden' }}>
+			<Box pb={4} mt="20px" sx={{ display: "flex", flexDirection: 'column', overflowY: 'hidden' }}>
 				<Box
 					display='flex'
 					flexDirection='row'
 					alignItems='center'
 					justifyContent='space-between'
-					height='50px'
+					height='10px'
+					p={4}
 					mx='20px'
+					border='0px'
+					width='fit-content'
+					sx={{
+						borderColor: '#999da0',
+						boxShadow: '0px 0px 4px 1px rgba(153,157,160, 0.3)'
+					}}
 				>
 					<Stack minWidth='320px'>
-						<Typography fontWeight={600} fontFamily='arial'>id</Typography>
+						<Typography fontFamily='Manrope' fontWeight={600}>id</Typography>
 					</Stack>
 					<Stack minWidth='380px'>
-						<Typography fontWeight={600} fontFamily='arial'>image</Typography>
+						<Typography fontFamily='Manrope' fontWeight={600}>image</Typography>
 					</Stack>
 					<Stack minWidth='380px'>
-						<Typography fontWeight={600} fontFamily='arial'>title</Typography>
+						<Typography fontFamily='Manrope' fontWeight={600}>title</Typography>
 					</Stack>
 					<Stack minWidth='320px'>
-						<Typography fontWeight={600} fontFamily='arial'>price</Typography>
+						<Typography fontFamily='Manrope' fontWeight={600}>price</Typography>
 					</Stack>
 					<Stack minWidth='380px'>
-						<Typography fontWeight={600} fontFamily='arial'>description</Typography>
+						<Typography fontFamily='Manrope' fontWeight={600}>description</Typography>
 					</Stack>
 					<Stack minWidth='320px'>
-						<Typography fontWeight={600} fontFamily='arial'>category</Typography>
+						<Typography fontFamily='Manrope' fontWeight={600}>category</Typography>
 					</Stack>
 				</Box>
 				{allProducts?.map((product) => (
@@ -195,26 +205,33 @@ export const ProductPostList = () =>
 						flexDirection='row'
 						alignItems='center'
 						justifyContent='space-between'
-						height='50px'
+						height='120px'
+						p={4}
 						mx='20px'
+						border='0px'
+						width='fit-content'
+						sx={{
+							borderColor: '#999da0',
+							boxShadow: '0px 0px 4px 1px rgba(153,157,160,0.3)'
+						}}
 					>
 						<Stack minWidth='320px'>
-							<Typography>{product.id}</Typography>
+							<Typography fontFamily='Manrope'>{product.id}</Typography>
 						</Stack>
 						<Stack minWidth='380px'>
 							<img width='60px' style={{ height: 'auto' }} src={product.image} />
 						</Stack>
 						<Stack minWidth='380px'>
-							<Typography>{product.title.slice(0, 50)}{product.title.length > 50 ? '...' : ''}</Typography>
+							<Typography fontFamily='Manrope'>{product.title.slice(0, 50)}{product.title.length > 50 ? '...' : ''}</Typography>
 						</Stack>
 						<Stack minWidth='320px'>
-							<Typography>${product.price}</Typography>
+							<Typography fontFamily='Manrope'>${product.price}</Typography>
 						</Stack>
 						<Stack minWidth='380px'>
-							<Typography>{product.description.slice(0, 35)}{product.description.length > 35 ? '...' : ''}</Typography>
+							<Typography fontFamily='Manrope'>{product.description.slice(0, 35)}{product.description.length > 35 ? '...' : ''}</Typography>
 						</Stack>
 						<Stack minWidth='320px'>
-							<Typography>{product.categoryName}</Typography>
+							<Typography fontFamily='Manrope'>{product.categoryName}</Typography>
 						</Stack>
 					</Box>
 				))}

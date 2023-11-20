@@ -6,7 +6,6 @@ import {
   ErrorComponent,
   notificationProvider,
   RefineSnackbarProvider,
-  ThemedLayoutV2,
 } from "@refinedev/mui";
 
 import CssBaseline from "@mui/material/CssBaseline";
@@ -32,6 +31,7 @@ import { ForgotPassword } from "./pages/forgotPassword";
 import { Login } from "./pages/login";
 import { Register } from "./pages/register";
 import { ProductPostCreate, ProductPostEdit, ProductPostList, ProductPostShow } from "./pages/products";
+import { ThemedLayoutV2 } from "./components/layout";
 
 function App() {
   return (

@@ -1,11 +1,14 @@
 import { AuthBindings } from "@refinedev/core";
+import axios from "axios";
 
 export const TOKEN_KEY = "refine-auth";
 
 export const authProvider: AuthBindings = {
-  login: async ({ username, email, password }) => {
-    if ((username || email) && password) {
+  login: async ({ username, password }) => {
+    if ((username) && password) {
       localStorage.setItem(TOKEN_KEY, username);
+      const data = await axios.post('http://localhost:3001', { username, password }).then(data => console.log(data))
+      console.log(data)
       return {
         success: true,
         redirectTo: "/",

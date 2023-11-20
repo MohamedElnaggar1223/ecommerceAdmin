@@ -1,11 +1,19 @@
-import { AuthPage } from "@refinedev/mui";
+import { AuthPage } from "../../components/pages/auth";
+
 
 export const Login = () => {
   return (
     <AuthPage
       type="login"
       formProps={{
-        defaultValues: { email: "demo@refine.dev", password: "demodemo" },
+        defaultValues: {
+          username: '',
+          password: ''
+        },
+        values: {
+          username: '',
+          password: ''
+        },
       }}
     />
   );
