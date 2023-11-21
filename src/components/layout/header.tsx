@@ -24,7 +24,7 @@ export const ThemedHeaderV2: React.FC<RefineThemedLayoutV2HeaderProps> = ({
   const prefferedSticky = pickNotDeprecated(sticky, isSticky) ?? true;
 
   return (
-    <AppBar position={prefferedSticky ? "sticky" : "relative"}>
+    <AppBar position={prefferedSticky ? "sticky" : "relative"} sx={{ backgroundColor: '#000' }}>
       <Toolbar>
         <HamburgerMenu />
         <Stack
@@ -41,7 +41,7 @@ export const ThemedHeaderV2: React.FC<RefineThemedLayoutV2HeaderProps> = ({
           >
             {user?.name && (
               <Typography variant="subtitle2" data-testid="header-user-name">
-                {user?.name}
+                {user?.name}dddd
               </Typography>
             )}
             {user?.avatar && <Avatar src={user?.avatar} alt={user?.name} />}

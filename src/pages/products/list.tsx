@@ -1,13 +1,16 @@
 import { Box, Button, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
-import { useList, useTable } from "@refinedev/core";
+import { useIsAuthenticated, useList, useTable } from "@refinedev/core";
 import { useNavigate } from "react-router-dom";
 import CustomButton from "../../components/common/CustomButton";
 import { Add } from "@mui/icons-material";
 import { useMemo } from "react";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 
 export const ProductPostList = () => 
 {
 	const navigate = useNavigate();
+	const { data: auth, refetch } = useIsAuthenticated();
 
 	const { data: categories, isLoading: catsLoading } = useList({
 		resource: 'category'
@@ -167,71 +170,99 @@ export const ProductPostList = () =>
 			<Box pb={4} mt="20px" sx={{ display: "flex", flexDirection: 'column', overflowY: 'hidden' }}>
 				<Box
 					display='flex'
+					border='1px solid #92a8d1'
 					flexDirection='row'
 					alignItems='center'
 					justifyContent='space-between'
 					height='10px'
 					p={4}
 					mx='20px'
-					border='0px'
 					width='fit-content'
 					sx={{
 						borderColor: '#999da0',
-						boxShadow: '0px 0px 4px 1px rgba(153,157,160, 0.3)'
+						// boxShadow: '0px 0px 4px 1px rgba(153,157,160, 0.3)'
 					}}
 				>
 					<Stack minWidth='320px'>
-						<Typography fontFamily='Manrope' fontWeight={600}>id</Typography>
+						<Typography fontSize='18px' fontFamily='Manrope' fontWeight={600}>id</Typography>
+					</Stack>
+					<Stack minWidth='180px'>
+						<Typography fontSize='18px' fontFamily='Manrope' fontWeight={600}>image</Typography>
 					</Stack>
 					<Stack minWidth='380px'>
-						<Typography fontFamily='Manrope' fontWeight={600}>image</Typography>
+						<Typography fontSize='18px' fontFamily='Manrope' fontWeight={600}>title</Typography>
+					</Stack>
+					<Stack minWidth='120px'>
+						<Typography fontSize='18px' fontFamily='Manrope' fontWeight={600}>price</Typography>
 					</Stack>
 					<Stack minWidth='380px'>
-						<Typography fontFamily='Manrope' fontWeight={600}>title</Typography>
+						<Typography fontSize='18px' fontFamily='Manrope' fontWeight={600}>description</Typography>
 					</Stack>
-					<Stack minWidth='320px'>
-						<Typography fontFamily='Manrope' fontWeight={600}>price</Typography>
+					<Stack minWidth='120px'>
+						<Typography fontSize='18px' fontFamily='Manrope' fontWeight={600}>category</Typography>
 					</Stack>
-					<Stack minWidth='380px'>
-						<Typography fontFamily='Manrope' fontWeight={600}>description</Typography>
-					</Stack>
-					<Stack minWidth='320px'>
-						<Typography fontFamily='Manrope' fontWeight={600}>category</Typography>
+					<Stack alignItems='flex-end' minWidth='120px'>
+						<Typography fontSize='18px' fontFamily='Manrope' fontWeight={600}>actions</Typography>
 					</Stack>
 				</Box>
 				{allProducts?.map((product) => (
 					<Box
 						display='flex'
+						key={product.id}
 						flexDirection='row'
 						alignItems='center'
 						justifyContent='space-between'
 						height='120px'
 						p={4}
 						mx='20px'
-						border='0px'
+						border='1px solid #92a8d1'
+						borderTop='0px'
 						width='fit-content'
 						sx={{
 							borderColor: '#999da0',
-							boxShadow: '0px 0px 4px 1px rgba(153,157,160,0.3)'
+							// boxShadow: '0px 0px 4px 1px rgba(153,157,160,0.3)'
 						}}
 					>
 						<Stack minWidth='320px'>
 							<Typography fontFamily='Manrope'>{product.id}</Typography>
 						</Stack>
-						<Stack minWidth='380px'>
+						<Stack minWidth='180px'>
 							<img width='60px' style={{ height: 'auto' }} src={product.image} />
 						</Stack>
 						<Stack minWidth='380px'>
 							<Typography fontFamily='Manrope'>{product.title.slice(0, 50)}{product.title.length > 50 ? '...' : ''}</Typography>
 						</Stack>
-						<Stack minWidth='320px'>
+						<Stack minWidth='120px'>
 							<Typography fontFamily='Manrope'>${product.price}</Typography>
 						</Stack>
 						<Stack minWidth='380px'>
 							<Typography fontFamily='Manrope'>{product.description.slice(0, 35)}{product.description.length > 35 ? '...' : ''}</Typography>
 						</Stack>
-						<Stack minWidth='320px'>
+						<Stack minWidth='120px'>
 							<Typography fontFamily='Manrope'>{product.categoryName}</Typography>
+						</Stack>
+						<Stack direction='row' justifyContent='flex-end' gap={1.5} minWidth='120px'>
+							<EditIcon 
+								sx={{
+									'&:hover':{
+										borderRadius: '100%',
+										backgroundColor: 'rgba(176, 176, 176, 0.15)',
+										cursor: 'pointer',
+										boxShadow: '0px 0px 0px 4px rgba(176, 176, 176, 0.15)'
+									}
+								}}
+								onClick={() => navigate(`/products/edit/${product.id}`)}
+							/>
+							<DeleteIcon
+								sx={{
+									'&:hover':{
+										borderRadius: '100%',
+										backgroundColor: 'rgba(176, 176, 176, 0.15)',
+										cursor: 'pointer',
+										boxShadow: '0px 0px 0px 4px rgba(176, 176, 176, 0.15)'
+									}
+								}} 
+							/>
 						</Stack>
 					</Box>
 				))}

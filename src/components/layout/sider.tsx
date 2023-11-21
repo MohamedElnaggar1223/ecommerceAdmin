@@ -16,9 +16,9 @@ import {
   useWarnAboutChange,
 } from "@refinedev/core";
 import {
-  ThemedTitleV2 as DefaultTitle,
   useThemedLayoutContext,
 } from "@refinedev/mui";
+import { ThemedTitleV2 as DefaultTitle } from './title'
 import ChevronLeft from "@mui/icons-material/ChevronLeft";
 import Dashboard from "@mui/icons-material/Dashboard";
 import ExpandLess from "@mui/icons-material/ExpandLess";
@@ -36,8 +36,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Paper from "@mui/material/Paper";
 import Tooltip from "@mui/material/Tooltip";
 import type { RefineThemedLayoutV2SiderProps } from "@refinedev/mui";
-
-import Inventory2Icon from '@mui/icons-material/Inventory2';
+import { icon } from '../../logo'
 
 export const ThemedSiderV2: React.FC<RefineThemedLayoutV2SiderProps> = ({
   Title: TitleFromProps,
@@ -156,7 +155,7 @@ export const ThemedSiderV2: React.FC<RefineThemedLayoutV2SiderProps> = ({
                     primary={label}
                     primaryTypographyProps={{
                       noWrap: true,
-                      fontSize: "14px",
+                      fontSize: "32px",
                     }}
                   />
                   {isOpen ? (
@@ -217,7 +216,19 @@ export const ThemedSiderV2: React.FC<RefineThemedLayoutV2SiderProps> = ({
               sx={{
                 pl: isNested ? 4 : 2,
                 py: isNested ? 1.25 : 1,
+                "&.Mui-selected":
+                {
+                  "&:hover":
+                  {
+                    backgroundColor: isSelected ? '#F8E2DE' : 'transparent'
+                  },
+                  backgroundColor: isSelected ? '#FAEDEA' : 'transparent'
+                },
                 justifyContent: "center",
+                margin: '10px auto',
+                borderRadius: '12px',
+                minHeight: '56px',
+                width: '90%',
                 color: isSelected ? "primary.main" : "text.primary",
               }}
             >
@@ -227,7 +238,7 @@ export const ThemedSiderV2: React.FC<RefineThemedLayoutV2SiderProps> = ({
                   transition: "margin-right 0.3s",
                   marginRight: siderCollapsed ? "0px" : "12px",
                   minWidth: "24px",
-                  color: "currentColor",
+                  color: isSelected ? '#000' : '#808191',
                 }}
               >
                 {icon ?? <ListOutlined />}
@@ -236,7 +247,9 @@ export const ThemedSiderV2: React.FC<RefineThemedLayoutV2SiderProps> = ({
                 primary={label}
                 primaryTypographyProps={{
                   noWrap: true,
-                  fontSize: "14px",
+                  fontSize: "16px",
+                  color: isSelected ? '#000' : '#808191',
+                  marginLeft: '10px'
                 }}
               />
             </ListItemButton>
@@ -284,7 +297,7 @@ export const ThemedSiderV2: React.FC<RefineThemedLayoutV2SiderProps> = ({
             primary={translate("dashboard.title", "Dashboard")}
             primaryTypographyProps={{
               noWrap: true,
-              fontSize: "14px",
+              fontSize: "16px",
             }}
           />
         </ListItemButton>
@@ -322,6 +335,10 @@ export const ThemedSiderV2: React.FC<RefineThemedLayoutV2SiderProps> = ({
         onClick={() => handleLogout()}
         sx={{
           justifyContent: "center",
+          margin: '10px auto',
+          borderRadius: '12px',
+          minHeight: '56px',
+          width: '90%'
         }}
       >
         <ListItemIcon
@@ -330,7 +347,7 @@ export const ThemedSiderV2: React.FC<RefineThemedLayoutV2SiderProps> = ({
             minWidth: "24px",
             transition: "margin-right 0.3s",
             marginRight: siderCollapsed ? "0px" : "12px",
-            color: "currentColor",
+            color: "#808191",
           }}
         >
           <Logout />
@@ -339,7 +356,7 @@ export const ThemedSiderV2: React.FC<RefineThemedLayoutV2SiderProps> = ({
           primary={t("buttons.logout", "Logout")}
           primaryTypographyProps={{
             noWrap: true,
-            fontSize: "14px",
+            fontSize: "16px",
           }}
         />
       </ListItemButton>
@@ -372,6 +389,7 @@ export const ThemedSiderV2: React.FC<RefineThemedLayoutV2SiderProps> = ({
       sx={{
         flexGrow: 1,
         paddingTop: "16px",
+        color: '#808191'
       }}
     >
       {renderSider()}
@@ -428,7 +446,7 @@ export const ThemedSiderV2: React.FC<RefineThemedLayoutV2SiderProps> = ({
                 fontSize: "14px",
               }}
             >
-              <RenderToTitle collapsed={false} />
+              <RenderToTitle text='Shop' icon={icon} collapsed={false} />
             </Box>
             {drawer}
           </Box>
@@ -441,6 +459,7 @@ export const ThemedSiderV2: React.FC<RefineThemedLayoutV2SiderProps> = ({
               width: drawerWidth(),
               overflow: "hidden",
               transition: "width 200ms cubic-bezier(0.4, 0, 0.6, 1) 0ms",
+              bgcolor: '#FCFCFC'
             },
           }}
           open
@@ -463,9 +482,13 @@ export const ThemedSiderV2: React.FC<RefineThemedLayoutV2SiderProps> = ({
                 `1px solid ${theme.palette.action.focus}`,
             }}
           >
-            <RenderToTitle collapsed={siderCollapsed} />
+            <RenderToTitle wrapperStyles={{
+              fontFamily: 'Manrope',
+              fontSize: '28px',
+              gap: 0
+            }} text='Shop' icon={icon} collapsed={siderCollapsed} />
             {!siderCollapsed && (
-              <IconButton size="small" onClick={() => setSiderCollapsed(true)}>
+              <IconButton sx={{ backgroundColor: '#FAEDEA', "&:hover" : {backgroundColor: '#F8E2DE'} }} size="small" onClick={() => setSiderCollapsed(true)}>
                 {<ChevronLeft />}
               </IconButton>
             )}

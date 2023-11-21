@@ -16,7 +16,7 @@ import routerBindings, {
   NavigateToResource,
   UnsavedChangesNotifier,
 } from "@refinedev/react-router-v6";
-import dataProvider from "@refinedev/simple-rest";
+import { dataProvider } from "./rest-data-provider";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import { authProvider } from "./authProvider";
 import { Header } from "./components/header";
@@ -33,6 +33,14 @@ import { Register } from "./pages/register";
 import { ProductPostCreate, ProductPostEdit, ProductPostList, ProductPostShow } from "./pages/products";
 import { ThemedLayoutV2 } from "./components/layout";
 
+import Inventory2Icon from '@mui/icons-material/Inventory2';
+import CategoryIcon from '@mui/icons-material/Category';
+import axiosInstance from "./rest-data-provider/refreshToken";
+import { OrderEdit, OrderShow, OrdersList } from "./pages/orders";
+import RestoreIcon from '@mui/icons-material/Restore';
+
+import './global.css'
+
 function App() {
   return (
     <BrowserRouter>
@@ -43,7 +51,7 @@ function App() {
           <RefineSnackbarProvider>
             <DevtoolsProvider>
               <Refine
-                dataProvider={dataProvider("http://localhost:3001")}
+                dataProvider={dataProvider("http://localhost:3001", axiosInstance)}
                 notificationProvider={notificationProvider}
                 routerProvider={routerBindings}
                 authProvider={authProvider}
@@ -56,6 +64,7 @@ function App() {
                     show: "/products/show/:id",
                     meta: {
                       canDelete: true,
+                      icon: <Inventory2Icon />
                     },
                   },
                   {
@@ -64,8 +73,17 @@ function App() {
                     create: "/category/create",
                     meta: {
                       canDelete: true,
+                      icon: <CategoryIcon />,
                     },
                   },
+                  {
+                    name: "orders",
+                    list: "/orders",
+                    meta: {
+                      canDelete: true,
+                      icon: <RestoreIcon />,
+                    },
+                  }
                 ]}
                 options={{
                   syncWithLocation: true,
@@ -100,8 +118,11 @@ function App() {
                     <Route path="/categories">
                       <Route index element={<CategoryList />} />
                       <Route path="create" element={<CategoryCreate />} />
-                      <Route path="edit/:id" element={<CategoryEdit />} />
-                      <Route path="show/:id" element={<CategoryShow />} />
+                    </Route>
+                    <Route path="/orders">
+                      <Route index element={<OrdersList />} />
+                      <Route path="edit/:id" element={<OrderEdit />} />
+                      <Route path="show/:id" element={<OrderShow />} />
                     </Route>
                     <Route path="*" element={<ErrorComponent />} />
                   </Route>

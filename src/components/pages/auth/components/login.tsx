@@ -153,6 +153,7 @@ export const LoginPage: React.FC<LoginProps> = ({
         >
           {renderProviders()}
           <TextField
+            //@ts-expect-error its broken
             {...register("username", {
               required: true,
             })}
@@ -160,6 +161,7 @@ export const LoginPage: React.FC<LoginProps> = ({
             margin="normal"
             fullWidth
             label={translate("pages.login.fields.username", "username")}
+            //@ts-expect-error its broken
             error={!!errors.username}
             name="username"
             type="username"
