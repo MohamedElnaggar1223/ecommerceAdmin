@@ -1,5 +1,5 @@
 import { Box, Button, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
-import { useIsAuthenticated, useList, useTable } from "@refinedev/core";
+import { useDelete, useIsAuthenticated, useList, useTable } from "@refinedev/core";
 import { useNavigate } from "react-router-dom";
 import CustomButton from "../../components/common/CustomButton";
 import { Add } from "@mui/icons-material";
@@ -10,6 +10,7 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 export const ProductPostList = () => 
 {
 	const navigate = useNavigate();
+	const { mutate: delProduct } = useDelete()
 	const { data: auth, refetch } = useIsAuthenticated();
 
 	const { data: categories, isLoading: catsLoading } = useList({
@@ -262,6 +263,7 @@ export const ProductPostList = () =>
 										boxShadow: '0px 0px 0px 4px rgba(176, 176, 176, 0.15)'
 									}
 								}} 
+								onClick={() => delProduct({ resource: 'products', id: product.id ?? '' })}
 							/>
 						</Stack>
 					</Box>
