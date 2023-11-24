@@ -1,8 +1,9 @@
-import { IResourceComponentsProps } from "@refinedev/core";
+import { IResourceComponentsProps, useOne } from "@refinedev/core";
 import { useForm } from "@refinedev/react-hook-form";
 import { useEffect, useState } from "react";
 import Form from "../../components/common/Form";
 import { FieldValues } from "react-hook-form";
+import { useParams } from "react-router-dom";
 
 export const ProductPostEdit: React.FC<IResourceComponentsProps> = () => 
 {
@@ -18,6 +19,14 @@ export const ProductPostEdit: React.FC<IResourceComponentsProps> = () =>
 	} = useForm({
 		shouldUseNativeValidation: true
 	})
+
+    const { id } = useParams()
+    const { data } = useOne({
+        resource: 'products',
+        id: id
+    })
+
+    console.log(data)
 
     useEffect(() => {
         register('additionalInfo', { required: true })

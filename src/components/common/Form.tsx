@@ -17,6 +17,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { useParams } from "react-router-dom";
+import Loading from "./Loading";
 
 interface FormProps {
     type: string,
@@ -77,7 +78,7 @@ const Form = ({
 
     useEffect(() => {
         if(isSuccess) {
-            const addsObj = data.data.additionalInfo
+            const addsObj = data.data.additionalInfo ?? {"" : ''}
             const addsArray = Object.keys(addsObj).map((info: string, index) => {
                 const newObj: any = {} 
                 newObj[info] = Object.values(addsObj)[index]
@@ -86,7 +87,7 @@ const Form = ({
             setAdditionalInputs(addsArray)
         }
         //eslint-disable-next-line
-    }, [getValues, isSuccess])
+    }, [data, getValues, isSuccess])
 
     useEffect(() => {
         if(isSuccess) {
@@ -96,6 +97,13 @@ const Form = ({
         }
         //eslint-disable-next-line
     }, [getValues, isSuccess])
+
+    useEffect(() => {
+        if(isSuccess){
+            const availableProd = data?.data.available
+            setAvailable(availableProd)
+        }
+    }, [data, isSuccess])
 
     // useEffect(() => {
     //     refetch()
@@ -111,6 +119,7 @@ const Form = ({
 
     if(isLoading) return <>Loading...</>
     if(isError) return <>Error</> 
+    if(formLoading) return <Loading />
 
     // console.log(getValues())
 
@@ -212,7 +221,7 @@ const Form = ({
                             Product Additional Info
                         </FormHelperText>
                         {
-                            additionalInputs.map((info, index) => (
+                            additionalInputs?.map((info, index) => (
                                 <Stack
                                     direction='row'
                                     gap={1.5}
@@ -392,7 +401,7 @@ const Form = ({
                         </FormControl>
                     </Stack>
 
-                    <FormControlLabel control={<Checkbox checked={available} onClick={() => setAvailable(prev => !prev)} />} label="Available" />
+                    <FormControlLabel control={<Checkbox disabled={formLoading} checked={available} onClick={() => setAvailable(prev => !prev)} />} label="Available" />
 
                     <Stack
                         direction="column"

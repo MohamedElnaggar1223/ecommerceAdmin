@@ -41,15 +41,16 @@ export const ProductPostCreate: React.FC<IResourceComponentsProps> = () =>
     };
 
 	return (
-        <Form
-            type="Create"
-            register={register}
-            onFinish={onFinish}
-            formLoading={formLoading}
-            handleSubmit={handleSubmit}
-            handleImageChange={handleImageChange}
-            onFinishHandler={onFinishHandler}
-            productImage={productImage}
-        />
+        // <Form
+        //     type="Create"
+        //     register={register}
+        //     onFinish={onFinish}
+        //     formLoading={formLoading}
+        //     handleSubmit={handleSubmit}
+        //     handleImageChange={handleImageChange}
+        //     onFinishHandler={onFinishHandler}
+        //     productImage={productImage}
+        // />
+        <></>
     );
 };
