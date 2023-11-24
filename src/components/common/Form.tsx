@@ -10,10 +10,13 @@ import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 
 import CustomButton from "./CustomButton";
-import { FieldValues, UseFormHandleSubmit } from "react-hook-form";
-import { BaseRecord, CreateResponse, UpdateResponse, useList } from "@refinedev/core";
+import { FieldValues, UseFormGetValues, UseFormHandleSubmit, UseFormSetValue, UseFormWatch } from "react-hook-form";
+import { BaseRecord, CreateResponse, UpdateResponse, useList, useOne } from "@refinedev/core";
 import { Checkbox, FormControlLabel } from "@mui/material";
-import { FormEventHandler } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import { useParams } from "react-router-dom";
 
 interface FormProps {
     type: string,
@@ -23,7 +26,9 @@ interface FormProps {
     handleSubmit: UseFormHandleSubmit<FieldValues, undefined>,
     handleImageChange: (file: any) => void,
     onFinishHandler: (data: FieldValues) => Promise<void> | void,
-    productImage: { name: string, url: string }
+    productImage: { name: string, url: string },
+    getValues: UseFormGetValues<FieldValues>,
+    setValue: UseFormSetValue<FieldValues>,
 }
 
 const Form = ({
@@ -34,15 +39,109 @@ const Form = ({
     formLoading,
     onFinishHandler,
     productImage,
+    getValues,
+    setValue,
 }: FormProps) => {
     const { data: categories, isLoading, isError } = useList({
         resource: 'categories'
     })
 
+    const { id } = useParams()
+    const { data, isSuccess, refetch } = useOne({
+        resource: 'products',
+        id: id
+    })
+
+    // console.log(data)
+
+    const [additionalInputs, setAdditionalInputs] = useState([{ '': '' }])
+    const [available, setAvailable] = useState(true)
+
     const allCategories = categories?.data ?? []
 
+    // useEffect(() => {
+    //     const fetchRe = async () => await refetch()
+    //     fetchRe()
+    //     if(isSuccess) {
+    //         console.log(data.data.available)
+    //         setAvailable(data.data.available)
+    //     }
+    //     //eslint-disable-next-line
+    // }, [refetch, isSuccess])
+
+    // refetch()
+
+    useEffect(() => {
+        refetch()
+    }, [])
+
+    useEffect(() => {
+        if(isSuccess) {
+            const addsObj = data.data.additionalInfo
+            const addsArray = Object.keys(addsObj).map((info: string, index) => {
+                const newObj: any = {} 
+                newObj[info] = Object.values(addsObj)[index]
+                return newObj
+            })
+            setAdditionalInputs(addsArray)
+        }
+        //eslint-disable-next-line
+    }, [getValues, isSuccess])
+
+    useEffect(() => {
+        if(isSuccess) {
+            console.log(data)
+            const availableProd = data.data.available
+            setAvailable(availableProd)
+        }
+        //eslint-disable-next-line
+    }, [getValues, isSuccess])
+
+    // useEffect(() => {
+    //     refetch()
+    // }, [refetch])
+
+    useEffect(() => {
+        setValue('additionalInfo', additionalInputs)
+    }, [additionalInputs, setValue])
+
+    useEffect(() => {
+        setValue('available', available)
+    }, [available, setValue])
+
     if(isLoading) return <>Loading...</>
-    if(isError) return <>Error</>
+    if(isError) return <>Error</> 
+
+    // console.log(getValues())
+
+    // console.log(Object.values(register("additionalInfo", { required: true })))
+    // console.log(getValues().additionalInfo)
+
+    function handleChangeKey(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index: number)
+    {
+        const addInfo = additionalInputs[index]
+        // Object.defineProperty(addInfo, e.target.value, Object.getOwnPropertyDescriptor(addInfo, Object.keys(addInfo)[0]));
+        const newObj = { [e.target.value]: Object.values(addInfo)[0] }
+        const newArray = additionalInputs.map((info, indexNo) => indexNo !== index ? info : newObj)
+        //@ts-expect-error array
+        setAdditionalInputs(newArray)
+    }
+
+    function handleChangeValue(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index: number)
+    {
+        const addInfo = additionalInputs[index]
+        // Object.defineProperty(addInfo, e.target.value, Object.getOwnPropertyDescriptor(addInfo, Object.keys(addInfo)[0]));
+        const newObj = { [Object.keys(addInfo)[0]]: e.target.value }
+        const newArray = additionalInputs.map((info, indexNo) => indexNo !== index ? info : newObj)
+        //@ts-expect-error array
+        setAdditionalInputs(newArray)
+    }
+
+    function handleRemoveObject(index: number)
+    {
+        const newArray = additionalInputs.filter((_, indexNo) => index !== indexNo)
+        setAdditionalInputs(newArray)
+    }
 
     return (
         <Box>
@@ -81,6 +180,140 @@ const Form = ({
                             {...register("title", { required: true })}
                         />
                     </FormControl>
+                    {/* <FormControl>
+                        <FormHelperText
+                            sx={{
+                                fontWeight: 500,
+                                margin: "10px 0",
+                                fontSize: 16,
+                                color: "#11142d",
+                            }}
+                        >
+                            Enter product details
+                        </FormHelperText>
+                        <TextField
+                            fullWidth
+                            required
+                            id="outlined-basic"
+                            color="info"
+                            variant="outlined"
+                            {...register("additionalInfo", { required: true })}
+                        />
+                    </FormControl> */}
+                    <FormControl sx={{ gap: 2 }}>
+                    <FormHelperText
+                            sx={{
+                                fontWeight: 500,
+                                margin: "10px 0",
+                                fontSize: 16,
+                                color: "#11142d",
+                            }}
+                        >
+                            Product Additional Info
+                        </FormHelperText>
+                        {
+                            additionalInputs.map((info, index) => (
+                                <Stack
+                                    direction='row'
+                                    gap={1.5}
+                                    alignItems='center'
+                                    key={index}
+                                >
+                                    <RemoveCircleOutlineIcon 
+                                        sx={{
+                                            '&:hover':{
+                                                borderRadius: '100%',
+                                                backgroundColor: 'rgba(176, 176, 176, 0.15)',
+                                                cursor: 'pointer',
+                                                boxShadow: '0px 0px 0px 4px rgba(176, 176, 176, 0.15)'
+                                            },
+                                            order: -1
+                                        }}
+                                        onClick={() => handleRemoveObject(index)}
+                                    />
+                                    <TextField
+                                        required
+                                        id="outlined-basic"
+                                        color="info"
+                                        variant="outlined"
+                                        value={Object.keys(info) ? Object.keys(info)[0] : ''}
+                                        onChange={(e) => handleChangeKey(e, index)}
+                                    />
+                                    <TextField
+                                        fullWidth
+                                        required
+                                        id="outlined-basic"
+                                        color="info"
+                                        variant="outlined"
+                                        value={Object.values(info) ? Object.values(info)[0] : ''}
+                                        onChange={(e) => handleChangeValue(e, index)}
+                                    />
+                                    {
+                                        index + 1 === additionalInputs.length ?
+                                        <AddCircleOutlineIcon 
+                                            sx={{
+                                                '&:hover':{
+                                                    borderRadius: '100%',
+                                                    backgroundColor: 'rgba(176, 176, 176, 0.15)',
+                                                    cursor: 'pointer',
+                                                    boxShadow: '0px 0px 0px 4px rgba(176, 176, 176, 0.15)'
+                                                }
+                                            }}
+                                            onClick={() => setAdditionalInputs(prev => [...prev, { '': '' }])}
+                                        />
+                                        :
+                                        <AddCircleOutlineIcon
+                                            sx={{
+                                                color: '#fcfcfc',
+                                            }}
+                                        />
+                                    }
+                                    {/* {
+                                        index + 1 === additionalInputs.length &&
+                                        <>
+                                        <AddCircleOutlineIcon 
+                                            sx={{
+                                                '&:hover':{
+                                                    borderRadius: '100%',
+                                                    backgroundColor: 'rgba(176, 176, 176, 0.15)',
+                                                    cursor: 'pointer',
+                                                    boxShadow: '0px 0px 0px 4px rgba(176, 176, 176, 0.15)'
+                                                }
+                                            }}
+                                            onClick={() => setAdditionalInputs(prev => [...prev, { '': '' }])}
+                                        />
+                                        <AddCircleOutlineIcon
+                                            sx={{
+                                                color: '#fcfcfc',
+                                                order: -1
+                                            }}
+                                        />
+                                        </>
+                                    }
+                                        <>
+                                        <RemoveCircleOutlineIcon 
+                                            sx={{
+                                                '&:hover':{
+                                                    borderRadius: '100%',
+                                                    backgroundColor: 'rgba(176, 176, 176, 0.15)',
+                                                    cursor: 'pointer',
+                                                    boxShadow: '0px 0px 0px 4px rgba(176, 176, 176, 0.15)'
+                                                },
+                                                order: -1
+                                            }}
+                                            onClick={() => handleRemoveObject(index)}
+                                        />
+                                        <AddCircleOutlineIcon
+                                            sx={{
+                                                color: '#fcfcfc'
+                                            }}
+                                        />
+                                        </> */}
+                                </Stack>
+                            ))
+                        }
+                    </FormControl>
+
                     <FormControl>
                         <FormHelperText
                             sx={{
@@ -159,7 +392,7 @@ const Form = ({
                         </FormControl>
                     </Stack>
 
-                    <FormControlLabel {...register('available', { required: true })} control={<Checkbox />} label="Available" />
+                    <FormControlLabel control={<Checkbox checked={available} onClick={() => setAvailable(prev => !prev)} />} label="Available" />
 
                     <Stack
                         direction="column"

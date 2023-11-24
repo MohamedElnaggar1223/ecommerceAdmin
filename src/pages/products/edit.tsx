@@ -1,25 +1,32 @@
-import { IResourceComponentsProps, useGetIdentity } from "@refinedev/core";
+import { IResourceComponentsProps } from "@refinedev/core";
 import { useForm } from "@refinedev/react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Form from "../../components/common/Form";
 import { FieldValues } from "react-hook-form";
 
 export const ProductPostEdit: React.FC<IResourceComponentsProps> = () => 
 {
-	const [productImage, setProductImage] = useState({ name: "", url: "" });
+	const [productImage, setProductImage] = useState({ name: "", url: "" })
 
 	const 
 	{
 		refineCore: { formLoading, onFinish },
 		register,
-		handleSubmit
+		handleSubmit,
+        getValues,
+        setValue,
 	} = useForm({
 		shouldUseNativeValidation: true
 	})
 
+    useEffect(() => {
+        register('additionalInfo', { required: true })
+        register('available')
+    }, [register, getValues])
+
 	const handleImageChange = (file: File) => {
         const reader = (readFile: File) =>
-            new Promise<string>((resolve, reject) => {
+            new Promise<string>((resolve) => {
                 const fileReader = new FileReader();
                 fileReader.onload = () => resolve(fileReader.result as string);
                 fileReader.readAsDataURL(readFile);
@@ -48,6 +55,8 @@ export const ProductPostEdit: React.FC<IResourceComponentsProps> = () =>
             handleSubmit={handleSubmit}
             handleImageChange={handleImageChange}
             onFinishHandler={onFinishHandler}
+            getValues={getValues}
+            setValue={setValue}
             productImage={productImage}
         />
     );
